@@ -44,13 +44,13 @@ function initChart() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Время'
+                        text: 'Time'
                     }
                 },
                 y: {
                     title: {
                         display: true,
-                        text: 'Значение'
+                        text: 'Water Level'
                     }
                 }
             }
@@ -63,7 +63,7 @@ function initChart() {
                     return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}`;
                 },
                 title: function(context) {
-                    return `Время: ${context[0].label}`;
+                    return `Time: ${context[0].label}`;
                 }
             },
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
