@@ -155,10 +155,6 @@ intervalSelect.addEventListener('change', () => {
 });
 async function updateTable(data) {
     try {
-        let min = 1;  
-        let max = 10;  
-        // Генерация целого числа от 5 до 15 включительно  
-        let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = ''; // Clear current rows
         
