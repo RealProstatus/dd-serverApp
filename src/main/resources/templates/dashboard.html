@@ -59,7 +59,7 @@
         <div class="col-md-6 mb-3">
             <div class="table-container">
                 <h3>Telemetry Data</h3>
-                <table class="table table-striped">
+                <table class="table table-striped" id="telemetryTable">
                     <thead>
                     <tr>
                         <th>Timestamp</th>
@@ -69,14 +69,17 @@
                         <th>Status</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tableBody">
                     <tr th:each="item : ${data}"
-                        th:class="${item.metricValue < 10.0} ? 'low-water' : 'normal-water'">
-                        <td th:text="${#temporals.format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${item.deviceId}"></td>
-                        <td th:text="${item.metricName}"></td>
-                        <td th:text="${item.metricValue}"></td>
-                        <td th:text="${item.status}"></td>
+                        th:class="${item.status == 'ALARM'} ? 'low-water' : 'normal-water'">
+                        <td th:text="${item.timestamp != null} ? ${#temporals.format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')} : 'N/A'"></td>
+                        <td th:text="${item.deviceId} ?: 'N/A'"></td>
+                        <td th:text="${item.metricName} ?: 'N/A'"></td>
+                        <td th:text="${item.metricValue} ?: 'N/A'"></td>
+                        <td th:text="${item.status} ?: 'N/A'"></td>
+                    </tr>
+                    <tr th:if="${data.isEmpty()}">
+                        <td colspan="5" class="text-center">No data available.</td>
                     </tr>
                     </tbody>
                 </table>
@@ -86,5 +89,39 @@
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Функция для обновления таблицы
+    function updateTable() {
+        fetch('/dashboard/data')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = ''; // Очищаем текущие строки
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">No data available.</td></tr>';
+                } else {
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.className = item.status === 'ALARM' ? 'low-water' : 'normal-water';
+                        row.innerHTML = `
+                            <td>${item.timestamp ? new Date(item.timestamp).toLocaleString() : 'N/A'}</td>
+                            <td>${item.deviceId || 'N/A'}</td>
+                            <td>${item.metricName || 'N/A'}</td>
+                            <td>${item.metricValue || 'N/A'}</td>
+                            <td>${item.status || 'N/A'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Обновляем таблицу каждые 3 секунды
+    setInterval(updateTable, 3000);
+
+    // Инициализируем таблицу при загрузке страницы
+    updateTable();
+</script>
 </body>
 </html>
