@@ -92,11 +92,7 @@ function updateChart(newData) {
     const timestamp = new Date().toLocaleTimeString();
     telemetryChart.data.labels.push(timestamp);
     console.log(newData[0].metricValue);
-    let min = 1;  
-    let max = 10;  
-    // Генерация целого числа от 5 до 15 включительно  
-    let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    telemetryChart.data.datasets[0].data.push(newData[0].metricValue + randomNumber);
+    telemetryChart.data.datasets[0].data.push(newData[0].metricValue);
     
     if (telemetryChart.data.labels.length > maxDataPoints) {
         telemetryChart.data.labels.shift();
