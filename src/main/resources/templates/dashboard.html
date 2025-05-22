@@ -32,6 +32,12 @@
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+        .low-water {
+            background-color: #ffcccc !important; /* Светло-красный для низкого уровня */
+        }
+        .normal-water {
+            background-color: #ccffcc !important; /* Светло-зеленый для нормального уровня */
+        }
         @media (max-width: 768px) {
             .image-placeholder {
                 height: 300px;
@@ -64,7 +70,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="item : ${data}">
+                    <tr th:each="item : ${data}"
+                        th:class="${item.metricValue < 10.0} ? 'low-water' : 'normal-water'">
                         <td th:text="${#temporals.format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${item.deviceId}"></td>
                         <td th:text="${item.metricName}"></td>
