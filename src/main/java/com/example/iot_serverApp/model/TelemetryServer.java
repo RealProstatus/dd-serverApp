@@ -1,49 +1,76 @@
 package com.example.iot_serverApp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
 
 @Entity
 @Table(name = "telemetry_data")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class TelemetryServer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "device_id", nullable = false)
     private String deviceId;
 
-    @Column(nullable = false)
-    private Instant timestamp;
-
-    @Column(nullable = false)
+    @Column(name = "metric_name", nullable = false)
     private String metricName;
 
-    @Column(nullable = false)
+    @Column(name = "metric_value", nullable = false)
     private Double metricValue;
 
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
-    public void    setTimestamp(Instant timestamp)   { this.timestamp = timestamp; }
-    public Instant getTimestamp()                    { return timestamp; }
+    @Column(name = "timestamp", nullable = false)
+    private Instant timestamp;
 
-    public void   setMetricName(String metricName)   { this.metricName = metricName; }
-    public String getMetricName()                    { return metricName; }
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
 
-    public void   setMetricValue(Double metricValue) { this.metricValue = metricValue;}
-    public Double getMetricValue()                   { return metricValue; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void   setStatus(String status)           { this.status = status; }
-    public String getStatus()                        { return status; }
+    public String getDeviceId() {
+        return deviceId;
+    }
 
-    public void   setDeviceId(String deviceId)       { this.deviceId = deviceId; }
-    public String getDeviceId()                      { return deviceId; }
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getMetricName() {
+        return metricName;
+    }
+
+    public void setMetricName(String metricName) {
+        this.metricName = metricName;
+    }
+
+    public Double getMetricValue() {
+        return metricValue;
+    }
+
+    public void setMetricValue(Double metricValue) {
+        this.metricValue = metricValue;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Instant getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
 }
