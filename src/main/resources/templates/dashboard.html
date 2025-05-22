@@ -32,11 +32,19 @@
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        .low-water {
+        /* Увеличиваем специфичность селекторов */
+        .table tr.low-water {
             background-color: #ffcccc !important; /* Светло-красный для низкого уровня */
         }
-        .normal-water {
+        .table tr.normal-water {
             background-color: #ccffcc !important; /* Светло-зеленый для нормального уровня */
+        }
+        /* Применяем цвет фона к ячейкам, чтобы перекрыть table-striped */
+        .table tr.low-water td {
+            background-color: #ffcccc !important;
+        }
+        .table tr.normal-water td {
+            background-color: #ccffcc !important;
         }
         @media (max-width: 768px) {
             .image-placeholder {
@@ -71,7 +79,7 @@
                     </thead>
                     <tbody id="tableBody">
                     <tr th:each="item : ${data}"
-                        th:class="${item.status == 'ALARM'} ? 'low-water' : 'normal-water'">
+                        th:class="${item.status == 'LOW_WATER'} ? 'low-water' : 'normal-water'">
                         <td th:text="${item.timestamp != null} ? ${#temporals.format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')} : 'N/A'"></td>
                         <td th:text="${item.deviceId} ?: 'N/A'"></td>
                         <td th:text="${item.metricName} ?: 'N/A'"></td>
@@ -89,12 +97,18 @@
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
+<script type="text/javascript">
     // Функция для обновления таблицы
     function updateTable() {
         fetch('/dashboard/data')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Fetched data:', data); // Отладка: выводим данные в консоль
                 const tbody = document.getElementById('tableBody');
                 tbody.innerHTML = ''; // Очищаем текущие строки
                 if (data.length === 0) {
@@ -102,7 +116,7 @@
                 } else {
                     data.forEach(item => {
                         const row = document.createElement('tr');
-                        row.className = item.status === 'ALARM' ? 'low-water' : 'normal-water';
+                        row.className = item.status === 'LOW_WATER' ? 'low-water' : 'normal-water';
                         row.innerHTML = `
                             <td>${item.timestamp ? new Date(item.timestamp).toLocaleString() : 'N/A'}</td>
                             <td>${item.deviceId || 'N/A'}</td>
